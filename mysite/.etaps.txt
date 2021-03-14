@@ -1,0 +1,5 @@
+python manage.py collectstatic
+
+153 static files copied to '/home/tenthent/Documents/testsite/mysite/static'.
+
+
