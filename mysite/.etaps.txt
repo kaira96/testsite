@@ -1,81 +1,66 @@
 
-Связи моделей
+Директивы и теги ч1
+Встроенные шаблоны пройтись по каждому
+https://djbook.ru/rel1.9/ref/templates/builtins.html
 /news/models.py
-###################################37
-class Category(models.Model):
-    title = models.CharField(max_length=155, db_index=True, verbose_name='Наименование категории')
+ #########################################47
+    def my_func(self):
+        return 'Hello from model'
+/news/templates/news.index.html
 
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
-        ordering = ['title']
+1
+<div class="card-header">
+<!--            Директивы и теги ч11-->
+            {{ item.my_func }}
+            Категория: {{ item.category }}
+          </div>
 
-class News(models.Model):
-    title = models.CharField(max_length=150, verbose_name='Наименование') #varchar 255
-    content = models.TextField(blank=True, verbose_name='Контент') #не обяз к заполнению
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации') #значение поля меняться не будет
-    update_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')  #когда в последнее время менялась запись
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name='Фото', blank=True) #будет создан файл картинки с годом месяцем и днем создания
-    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
-    ##########################################38
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, default=1)
+В админке добавляем текст <h1>Content</h1>
 
-python manage.py makemigrations
-python manage.py migrate
-Ошибка из-за default=1
-class News(models.Model):
-    title = models.CharField(max_length=150, verbose_name='Наименование') #varchar 255
-    content = models.TextField(blank=True, verbose_name='Контент') #не обяз к заполнению
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации') #значение поля меняться не будет
-    update_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')  #когда в последнее время менялась запись
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name='Фото', blank=True) #будет создан файл картинки с годом месяцем и днем создания
-    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
-    # ##########################################38
-    # category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, default=1)
-    ##########################################39
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True)
 
-python manage.py makemigrations
-python manage.py migrate
-Ошибка из-за предыдушей миграции
-Удалить
-0003_-миграцию
-0004_-миграцию
-python manage.py makemigrations
-python manage.py migrate
-/news/admin.py
-#################################40
-from .models import News, Category
-#################################41
-admin.site.register(News, NewsAdmin)
-admin.site.register(Category, CategoryAdmin)
-##################################42
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    search_fields = ('title',)
-На сайте в админке создаем категории Спорт политика наука и тд
-/news/models.py
-###################################43
-    def __str__(self):
-        return self.title  # Возвращает строковое состояние объекта
-На сайте в админке создаем новость
-##################################44
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', 'created_at', 'update_at', 'is_published')
-    list_display_links = ('id', 'title')
-    search_fields = ('title', 'content')
-/news/models.py
-##########################################45
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, verbose_name='Категория')
-/news/admin.py
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', 'created_at', 'update_at', 'is_published')
-    list_display_links = ('id', 'title')
-    search_fields = ('title', 'content')
-    #############################################46
-    list_editable = ('is_published',)
-    list_filter = ('is_published', 'category')
-########################################################
+2
+<div class="card-body">
+            <h5 class="card-title">{{item.title}}</h5>
+            <!--            Директивы и теги ч12-->
+            {% autoescape off %}
+            <p class="card-text">{{item.content}}</p>
+            {% endautoescape %}
+            <a href="#" class="btn btn-primary">Read more...</a>
+          </div>
 
+3
+<!--            Директивы и теги ч13-->
+<!--            <h5 class="card-title {% cycle 'text-danger' 'text-success' %}">{{item.title}}</h5>-->
+
+
+4
+<div class="card-header">
+            <!--            Директивы и теги ч14-->
+<!--            {{ forloop.counter }}-->
+            Категория: {{ item.category }}
+          </div>
+
+
+5
+<div class="card-header">
+            <!--            Директивы и теги ч15-->
+<!--            {{ forloop.counter reversed }}-->
+            Категория: {{ item.category }}
+          </div>
+
+
+6
+{% for item in news2 %} - если таких нет
+<!--            Директивы и теги ч16-->
+{% empty %}
+	oops... - тогда выйдет такое сообщение
+{% endfor %}
+
+
+
+7
+
+<!--            Директивы и теги ч17-->
+{% now "Y-m-d H:i:s" %}
+##################################################################
 
