@@ -1,77 +1,66 @@
 
-Templates
-#####################################21
+Admin
+python manage.py createsuperuser
+Вход в админку
+/news/admin.py
+#################################27
+admin.site.register(News)
+#################################28
 from .models import News
+/news/models.py
+###################################29
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+	ordering = ['-created_at']
 /news/views.py
-############################22
+#############################30
 def index(request):
     news = News.objects.all()
-    res = '<h1>Список новостей</h1>'
-    for item in news:
-        res += f'<div>\n<p>{item.title}</p>\n<p>{item.content}</p>\n</div>\n<hr>\n'
-    return HttpResponse(res)
-/news/templates/news/index.html
-/news/views.py
-#############################23
-# def index(request):
-#     news = News.objects.all()
-#     return render(request, 'news/index.html', {'news' : news, 'title' : 'Список новостей'})
-urlpatterns = [
-############################24
-    path('', index),
-]
-/news/templates/news/index.html
-<!--1-->
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>{{ title }}</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>{{ title }}</h1>-->
-<!--{{ news }}-->
-
-<!--</body>-->
-<!--</html>-->
-
-<!--2-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-
-<h1>{{ title }}</h1>
-
-{% for item in news %}
-<div>
-    <p>{{ item.title }}</p>
-    <p>{{ item.content }}</p>
-    <p>{{ item.created_at|date:"Y-m-d H:i:s" }}</p>
-</div>
-<hr>
-{% endfor %}
-
-</body>
-</html>
-/news/views.py
-# #############################25
-# def index(request):
-#     news = News.objects.all()
-#     context = {
-#         'news': news,
-#         'title': 'Список новостей'
-#     }
-#     return render(request, template_name='news/index.html', context=context)
-#############################26
-def index(request):
-    news = News.objects.order_by('-created_at')
     context = {
         'news': news,
         'title': 'Список новостей'
     }
     return render(request, template_name='news/index.html', context=context)
-#############################################################
+/news/apps.py
+#################################31
+class NewsConfig(AppConfig):
+    name = 'news'
+    verbose_name = 'Новости'
+/news/admin.py
+##################################32
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'created_at', 'update_at', 'is_published')
+
+#################################33
+admin.site.register(News, NewsAdmin)
+/news/models.py
+###################################34
+class News(models.Model):
+    title = models.CharField(max_length=150, verbose_name='Наименование') #varchar 255
+    content = models.TextField(blank=True, verbose_name='Контент') #не обяз к заполнению
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации') #значение поля меняться не будет
+    update_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')  #когда в последнее время менялась запись
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name='Фото') #будет создан файл картинки с годом месяцем и днем создания
+    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+
+/news/admin.py
+##################################35
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'created_at', 'update_at', 'is_published')
+    list_display_links = ('id', 'title')
+    search_fields = ('title', 'content')
+Из админки на сайте создаем новость и добавляем картинку появится папка /media/photos/2020/02/24/и картинка.jpg
+/news/models/py
+###################################36
+class News(models.Model):
+    title = models.CharField(max_length=150, verbose_name='Наименование') #varchar 255
+    content = models.TextField(blank=True, verbose_name='Контент') #не обяз к заполнению
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации') #значение поля меняться не будет
+    update_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')  #когда в последнее время менялась запись
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name='Фото', blank=True) #будет создан файл картинки с годом месяцем и днем создания
+    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+python manage.py makemigrations
+python manage.py migrate
+#######################################################
+
