@@ -1,7 +1,20 @@
-pip install Pillow
+python manage.py shell
 
-python manage.py makemigrations
+from news.models import News
 
-python manage.py sqlmigrate news 0001
+from django.db import connection
+connection.queries
 
-python manage.py migrate
+news1 = News(title='Новость 1', content='Контент новости 1')
+news1.save()
+news1.pk
+
+
+news2 = News()
+news2.title = 'Новость 2'
+news2.content = 'Контент новости 2'
+news2.save()
+
+
+news3 = News.objects.create(title='Новость 3', content='Контент новости 3')
+news3.pk
