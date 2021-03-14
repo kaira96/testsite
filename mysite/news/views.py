@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-# Контроллеры функций
+
 def index(request):
     # print(dir(request))
     return HttpResponse('Hello world')
