@@ -1,32 +1,39 @@
-Миграции
-При запуске может ругаться на модель /news/models.py/News/photo
-и просить установить Pollow так как ImageField работает с
-этой библиотекой
-python manage.py makemigrations
-Migrations for 'news':
-  news/migrations/0001_initial.py
-    - Create model News
-Для создания таблицы в SQLite
-python manage.py sqlmigrate news 0001
-BEGIN;
---
--- Create model News
---
-CREATE TABLE "news_news" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(150) NOT NULL, "content" text NOT NULL, "created_at" datetime NOT NULL, "update_at" datetime NOT NULL, "photo" varchar(100) NOT NULL, "is_published" bool NOT NULL);
-COMMIT;
-python manage.py migrate
-/mysite/settings.py
-####################################16
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-/mysite/urls.py
-#############################17
-if settings.DEBUG:
-    urlpatterns += static
-##############################18
-from django.conf import settings
-from django.conf.urls.static import static
-#############################19
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#####################################################
+
+CRUD p1 CREATE
+ORM
+python manage.py shell
+from news.models import News
+>>> from news.models import News
+>>> News(title='Новость 1', content='Контент новости 1')
+<News: News object (None)>
+>>> news1 = _
+>>> news1
+<News: News object (None)>
+>>> news1.title
+'Новость 1'
+>>> news1.id
+>>> news1.save()
+>>> news1.id
+1
+>>> from django.db import connection
+>>> connection.queries
+[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}]
+>>> news1.pk
+1
+>>> news2 = News(title='Новость 2', content='Контент новости 2')
+>>> connection.queries
+[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}]
+>>> news2.save()
+>>> connection.queries
+[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}, {'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 2\', \'Контент новости 2\', \'2021-02-23 10:26:40.409632\', \'2021-02-23 10:26:40.409715\', \'\', 1)', 'time': '0.007'}]
+>>> news3 = News()
+>>> news3.title = 'Новость 3'
+>>> news3.content = 'Контент новости 3'
+>>> news3.save()
+>>> news4 = News.objects.create(title='Новость 4', content='Контент новости 4')
+>>> news4.pk
+4
+>>> News.objects.create(title='Новость 5', content='Контент новости 5')
+<News: News object (5)>
+#######################################################
+
