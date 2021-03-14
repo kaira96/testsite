@@ -1,20 +1,31 @@
-python manage.py shell
-
-from news.models import News
-
-from django.db import connection
-connection.queries
-
-news1 = News(title='Новость 1', content='Контент новости 1')
-news1.save()
-news1.pk
+def __str__(self):
+    return self.title
 
 
-news2 = News()
-news2.title = 'Новость 2'
-news2.content = 'Контент новости 2'
-news2.save()
+news = News.objects.all()
+for item in news:
+	print(item.title, item.is_published)
 
 
-news3 = News.objects.create(title='Новость 3', content='Контент новости 3')
-news3.pk
+News.objects.filter(title='News 5')
+
+
+News.objects.get(pk=3)
+
+
+UPDATE
+news7 = News.objects.get(pk=7)
+news7.title = 'News 6'
+news7.save()
+
+
+DELETE
+news7.delete()
+
+
+ORDER BY
+News.objects.order_by('title')
+News.objects.order_by('-title')
+
+
+News.objects.exclude(title='Lorem ipsum')

@@ -1,39 +1,58 @@
-
-CRUD p1 CREATE
+CRUD p2 READ
 ORM
-python manage.py shell
-from news.models import News
+>>> News.objects.all()
+<QuerySet [<News: News object (1)>, <News: News object (2)>, <News: News object (3)>, <News: News object (4)>, <News: News object (5)>]>
+/news/models.py/News/
+###################################20
+    def __str__(self):
+        return self.title
+>>> exit()
 >>> from news.models import News
->>> News(title='Новость 1', content='Контент новости 1')
-<News: News object (None)>
->>> news1 = _
->>> news1
-<News: News object (None)>
->>> news1.title
-'Новость 1'
->>> news1.id
->>> news1.save()
->>> news1.id
-1
->>> from django.db import connection
->>> connection.queries
-[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}]
->>> news1.pk
-1
->>> news2 = News(title='Новость 2', content='Контент новости 2')
->>> connection.queries
-[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}]
->>> news2.save()
->>> connection.queries
-[{'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 1\', \'Контент новости 1\', \'2021-02-23 10:19:44.514536\', \'2021-02-23 10:19:44.514652\', \'\', 1)', 'time': '0.005'}, {'sql': 'INSERT INTO "news_news" ("title", "content", "created_at", "update_at", "photo", "is_published") VALUES (\'Новость 2\', \'Контент новости 2\', \'2021-02-23 10:26:40.409632\', \'2021-02-23 10:26:40.409715\', \'\', 1)', 'time': '0.007'}]
->>> news3 = News()
->>> news3.title = 'Новость 3'
->>> news3.content = 'Контент новости 3'
->>> news3.save()
->>> news4 = News.objects.create(title='Новость 4', content='Контент новости 4')
->>> news4.pk
-4
->>> News.objects.create(title='Новость 5', content='Контент новости 5')
-<News: News object (5)>
-#######################################################
-
+>>> News.objects.all()
+<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 4>, <News: Новость 5>]>
+>>> news = _
+>>> news
+<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 4>, <News: Новость 5>]>
+>>> for item in news:
+...     print(item.title, item.is_published)
+...
+Новость 1 True
+Новость 2 True
+Новость 3 True
+Новость 4 True
+Новость 5 True
+>>> News.objects.create(title='News 5', content='News 6 content')
+<News: News 5>
+>>> from news.models import News
+>>> News.objects.filter(title='News 5', content = 'News 6 content')
+<QuerySet [<News: News 5>]>
+>>> News.objects.filter(title='News 6')
+<QuerySet []>
+>>> News.objects.get(pk=5)
+<News: Новость 5>
+>>> News.objects.get(title='News 5')
+<News: News 5>
+UPDATE
+>>> News.objects.get(pk=4)
+<News: Новость 4>
+>>> news4 = _
+>>> news4
+<News: Новость 4>
+>>> news4.title = 'News 4'
+>>> news4.save()
+DELETE
+>>> news6 = News.objects.get(pk=6)
+>>> news6.delete()
+(1, {'news.News': 1})
+#
+>>> News.objects.all()
+<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: News 4>, <News: Новость 5>]>
+>>> News.objects.order_by().all()
+<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: News 4>, <News: Новость 5>]>
+>>> News.objects.order_by('title')
+<QuerySet [<News: News 4>, <News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 5>]>
+>>> News.objects.order_by('-title')
+<QuerySet [<News: Новость 5>, <News: Новость 3>, <News: Новость 2>, <News: Новость 1>, <News: News 4>]>
+>>> News.objects.exclude(title='News 4')
+<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 5>]>
+########################################################################
