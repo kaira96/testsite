@@ -1,0 +1,63 @@
+Контороллеры и маршруты
+/news/views.py
+############################1
+from django.http import HttpResponse
+############################2
+Контроллер функций
+def index(requests):
+    print(requests)
+    return HttpResponse('Hello World')
+/mysite/urls.py
+############################3
+from news.views import index
+/mysite - правой кнопкой мыши и Mark Directory as Source Root
+urlpatterns = [
+    path('admin/', admin.site.urls),
+############################4
+    path('news/', index,),
+]
+/news/views.py
+# ############################5
+# def index(requests):
+#     print(dir(requests))
+#     return HttpResponse('Hello World')
+############################6
+def index(requests):
+    return HttpResponse('Hello World')
+
+def test(requests):
+    return HttpResponse('<h1>Тестовая страница</h1>')
+/mysite/urls.py
+urlpatterns = [
+    path('admin/', admin.site.urls),
+############################7
+    path('news/', index,),
+    path('test/', test,),
+]
+############################8
+from news.views import *
+############################9
+from django.urls import path, include
+urlpatterns = [
+    path('admin/', admin.site.urls),
+############################10
+    path('news/', include('news.urls'))
+]
+Создаем новый файл в /news/urls.py
+/news/urls.py
+############################11
+from django.urls import path
+urlpatterns = [
+############################12
+    path('', index)
+]
+############################13
+from .views import *
+urlpatterns = [
+############################14
+    path('', index),
+    path('test/', test),
+]
+##############################################
+
+
