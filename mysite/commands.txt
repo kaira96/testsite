@@ -29,3 +29,5 @@ News.objects.order_by('-title')
 
 
 News.objects.exclude(title='Lorem ipsum')
+
+не шаблонов а адресов!
