@@ -1,58 +1,77 @@
-CRUD p2 READ
-ORM
->>> News.objects.all()
-<QuerySet [<News: News object (1)>, <News: News object (2)>, <News: News object (3)>, <News: News object (4)>, <News: News object (5)>]>
-/news/models.py/News/
-###################################20
-    def __str__(self):
-        return self.title
->>> exit()
->>> from news.models import News
->>> News.objects.all()
-<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 4>, <News: Новость 5>]>
->>> news = _
->>> news
-<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 4>, <News: Новость 5>]>
->>> for item in news:
-...     print(item.title, item.is_published)
-...
-Новость 1 True
-Новость 2 True
-Новость 3 True
-Новость 4 True
-Новость 5 True
->>> News.objects.create(title='News 5', content='News 6 content')
-<News: News 5>
->>> from news.models import News
->>> News.objects.filter(title='News 5', content = 'News 6 content')
-<QuerySet [<News: News 5>]>
->>> News.objects.filter(title='News 6')
-<QuerySet []>
->>> News.objects.get(pk=5)
-<News: Новость 5>
->>> News.objects.get(title='News 5')
-<News: News 5>
-UPDATE
->>> News.objects.get(pk=4)
-<News: Новость 4>
->>> news4 = _
->>> news4
-<News: Новость 4>
->>> news4.title = 'News 4'
->>> news4.save()
-DELETE
->>> news6 = News.objects.get(pk=6)
->>> news6.delete()
-(1, {'news.News': 1})
-#
->>> News.objects.all()
-<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: News 4>, <News: Новость 5>]>
->>> News.objects.order_by().all()
-<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: News 4>, <News: Новость 5>]>
->>> News.objects.order_by('title')
-<QuerySet [<News: News 4>, <News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 5>]>
->>> News.objects.order_by('-title')
-<QuerySet [<News: Новость 5>, <News: Новость 3>, <News: Новость 2>, <News: Новость 1>, <News: News 4>]>
->>> News.objects.exclude(title='News 4')
-<QuerySet [<News: Новость 1>, <News: Новость 2>, <News: Новость 3>, <News: Новость 5>]>
-########################################################################
+
+Templates
+#####################################21
+from .models import News
+/news/views.py
+############################22
+def index(request):
+    news = News.objects.all()
+    res = '<h1>Список новостей</h1>'
+    for item in news:
+        res += f'<div>\n<p>{item.title}</p>\n<p>{item.content}</p>\n</div>\n<hr>\n'
+    return HttpResponse(res)
+/news/templates/news/index.html
+/news/views.py
+#############################23
+# def index(request):
+#     news = News.objects.all()
+#     return render(request, 'news/index.html', {'news' : news, 'title' : 'Список новостей'})
+urlpatterns = [
+############################24
+    path('', index),
+]
+/news/templates/news/index.html
+<!--1-->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>{{ title }}</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>{{ title }}</h1>-->
+<!--{{ news }}-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!--2-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<h1>{{ title }}</h1>
+
+{% for item in news %}
+<div>
+    <p>{{ item.title }}</p>
+    <p>{{ item.content }}</p>
+    <p>{{ item.created_at|date:"Y-m-d H:i:s" }}</p>
+</div>
+<hr>
+{% endfor %}
+
+</body>
+</html>
+/news/views.py
+# #############################25
+# def index(request):
+#     news = News.objects.all()
+#     context = {
+#         'news': news,
+#         'title': 'Список новостей'
+#     }
+#     return render(request, template_name='news/index.html', context=context)
+#############################26
+def index(request):
+    news = News.objects.order_by('-created_at')
+    context = {
+        'news': news,
+        'title': 'Список новостей'
+    }
+    return render(request, template_name='news/index.html', context=context)
+#############################################################
