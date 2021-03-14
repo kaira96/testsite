@@ -1,0 +1,7 @@
+pip install Pillow
+
+python manage.py makemigrations
+
+python manage.py sqlmigrate news 0001
+
+python manage.py migrate

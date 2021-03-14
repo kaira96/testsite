@@ -1,14 +1,32 @@
-Модели
-/news/models.py
-###################################15
-class News(models.Model):
-    title = models.CharField(max_length=150) #varchar 255
-    content = models.TextField(blank=True) #не обяз к заполнению
-    created_at = models.DateTimeField(auto_now_add=True) #значение поля меняться не будет
-    update_at = models.DateTimeField(auto_now=True)  #когда в последнее время менялась запись
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d') #будет создан файл картинки с годом месяцем и днем создания
-    is_published = models.BooleanField(default=True)
-###############################################
-
-
-
+Миграции
+При запуске может ругаться на модель /news/models.py/News/photo
+и просить установить Pollow так как ImageField работает с
+этой библиотекой
+python manage.py makemigrations
+Migrations for 'news':
+  news/migrations/0001_initial.py
+    - Create model News
+Для создания таблицы в SQLite
+python manage.py sqlmigrate news 0001
+BEGIN;
+--
+-- Create model News
+--
+CREATE TABLE "news_news" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(150) NOT NULL, "content" text NOT NULL, "created_at" datetime NOT NULL, "update_at" datetime NOT NULL, "photo" varchar(100) NOT NULL, "is_published" bool NOT NULL);
+COMMIT;
+python manage.py migrate
+/mysite/settings.py
+####################################16
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+/mysite/urls.py
+#############################17
+if settings.DEBUG:
+    urlpatterns += static
+##############################18
+from django.conf import settings
+from django.conf.urls.static import static
+#############################19
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#####################################################
