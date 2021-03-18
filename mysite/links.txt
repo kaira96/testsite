@@ -1,0 +1,5 @@
+https://docs.djangoproject.com/en/3.0/ref/databases/
+
+https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient
+
+https://stackoverflow.com/questions/51926091/django-mysqlclient-backend-produces-django-db-utils-operationalerror-2059-nu
