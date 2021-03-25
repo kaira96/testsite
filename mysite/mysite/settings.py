@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'debug_toolbar',
+    'captcha',
     'news.apps.NewsConfig',
 ]
 
@@ -216,3 +217,8 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+
+CAPTCHA_LETTER_ROTATION = None
+CAPTCHA_NOISE_FUNCTIONS = False
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
