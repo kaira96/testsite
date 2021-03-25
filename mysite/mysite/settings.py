@@ -222,3 +222,11 @@ CKEDITOR_CONFIGS = {
 CAPTCHA_LETTER_ROTATION = None
 CAPTCHA_NOISE_FUNCTIONS = False
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'django_cache'),
+    }
+}
+
