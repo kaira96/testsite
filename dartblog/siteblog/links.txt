@@ -1,0 +1,1 @@
+https://www.reg.ru/support/hosting-i-servery/yazyki-programmirovaniya-i-skripty/kak-ustanovit-django-na-hosting
